@@ -114,7 +114,7 @@ jobs:
       - name: Publish
         if: github.ref == 'refs/heads/master'
         run: |
-          npm publish
+          npm publish --access public
           VERSION="$(node -p "require('./package.json').version")"
           echo package_version=${VERSION} >> $GITHUB_ENV
           echo $package_version
@@ -125,7 +125,7 @@ jobs:
       - name: Publish to beta
         if: github.ref == 'refs/heads/develop'
         run: |
-          npm publish --tag beta
+          npm publish --tag beta --access public
           VERSION="$(node -p "require('./package.json').version")@beta"
           echo package_version=${VERSION} >> $GITHUB_ENV
         env:
