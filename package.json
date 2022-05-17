@@ -2,8 +2,8 @@
   "name": "@athombv/node-stream-trim",
   "version": "1.0.0",
   "description": "Trims a given portion from an input stream",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
   "engines": {
     "node": ">=16.0.0"
   },
