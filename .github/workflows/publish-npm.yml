@@ -90,23 +90,51 @@ jobs:
           npm run build
 
       - name: Version bump patch
-        if: github.event.inputs.versionBumpType == 'patch' || contains(github.event.head_commit.message, '#patch') && !contains(github.event.head_commit.message, '#minor') && !contains(github.event.head_commit.message, '#major')
+        if: github.ref == 'refs/heads/master' && (github.event.inputs.versionBumpType == 'patch' || contains(github.event.head_commit.message, '#patch') && !contains(github.event.head_commit.message, '#minor') && !contains(github.event.head_commit.message, '#major'))
         run: |
           npm version patch
           git config pull.rebase false
           git pull
           git push --follow-tags
       - name: Version bump minor
-        if: github.event.inputs.versionBumpType == 'minor' || contains(github.event.head_commit.message, '#minor') && !contains(github.event.head_commit.message, '#major')
+        if: github.ref == 'refs/heads/master' && (github.event.inputs.versionBumpType == 'minor' || contains(github.event.head_commit.message, '#minor') && !contains(github.event.head_commit.message, '#major'))
         run: |
           npm version minor
           git config pull.rebase false
           git pull
           git push --follow-tags
       - name: Version bump major
-        if: github.event.inputs.versionBumpType == 'major' || contains(github.event.head_commit.message, '#major')
+        if: github.ref == 'refs/heads/master' && (github.event.inputs.versionBumpType == 'major' || contains(github.event.head_commit.message, '#major'))
         run: |
           npm version major
+          git config pull.rebase false
+          git pull
+          git push --follow-tags
+      - name: Version bump prepatch
+        if: github.ref == 'refs/heads/develop' && (github.event.inputs.versionBumpType == 'prepatch' || contains(github.event.head_commit.message, '#prepatch') && !contains(github.event.head_commit.message, '#preminor') && !contains(github.event.head_commit.message, '#premajor'))
+        run: |
+          npm version prepatch --preid=beta
+          git config pull.rebase false
+          git pull
+          git push --follow-tags
+      - name: Version bump preminor
+        if: github.ref == 'refs/heads/develop' && (github.event.inputs.versionBumpType == 'preminor' || contains(github.event.head_commit.message, '#preminor') && !contains(github.event.head_commit.message, '#premajor'))
+        run: |
+          npm version preminor --preid=beta
+          git config pull.rebase false
+          git pull
+          git push --follow-tags
+      - name: Version bump premajor
+        if: github.ref == 'refs/heads/develop' && (github.event.inputs.versionBumpType == 'premajor' || contains(github.event.head_commit.message, '#premajor'))
+        run: |
+          npm version premajor --preid=beta
+          git config pull.rebase false
+          git pull
+          git push --follow-tags
+      - name: Version bump prerelease
+        if: github.ref == 'refs/heads/develop' && (github.event.inputs.versionBumpType == 'prerelease' || contains(github.event.head_commit.message, '#newbeta'))
+        run: |
+          npm version prerelease --preid=beta
           git config pull.rebase false
           git pull
           git push --follow-tags
