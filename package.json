@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc",
     "test": "ts-mocha 'test/**/*.ts'",
-    "lint": "eslint ."
+    "lint": "eslint lib/**/*.ts test/**/*.ts"
   },
   "keywords": [
     "node",
