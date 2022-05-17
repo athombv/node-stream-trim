@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "ts-mocha",
+    "test": "ts-mocha 'test/**/*.ts'",
     "lint": "eslint ."
   },
   "keywords": [
