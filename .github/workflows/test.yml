@@ -1,4 +1,4 @@
-name: Lint
+name: Test
 
 # Optional secrets:
 # - SSH_KEY: if `npm ci` needs to install private npm packages
