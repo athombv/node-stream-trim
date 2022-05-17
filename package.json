@@ -1,23 +1,31 @@
 {
   "name": "@athombv/node-stream-trim",
-  "version": "1.0.0",
+  "version": "1.0.2-beta.0",
   "description": "Trims a given portion from an input stream",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
   "engines": {
     "node": ">=16.0.0"
   },
   "scripts": {
     "build": "tsc",
     "test": "ts-mocha 'test/**/*.ts'",
-    "lint": "eslint ."
+    "lint": "eslint lib/**/*.ts test/**/*.ts"
   },
   "keywords": [
     "node",
     "stream",
     "trim"
   ],
-  "author": "Athom B.V.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/athombv/node-stream-trim.git"
+  },
+  "author": "Many Talented People @ Athom B.V.",
+  "bugs": {
+    "url": "https://github.com/athombv/node-stream-trim/issues"
+  },
+  "homepage": "https://github.com/athombv/node-stream-trim#readme",
   "license": "ISC",
   "devDependencies": {
     "@types/mocha": "^9.1.1",
