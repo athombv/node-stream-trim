@@ -17,7 +17,7 @@ To trim an input stream from byte 5 until 11, do the following (test.js):
 ```javascript
 const trimStream = require('@athombv/node-stream-trim').default;
 
-const trim = trimStream({ start: 5, end: 11 });
+const trim = trimStream({ start: 5, end: 12 });
 
 process.stdin.pipe(trim).pipe(process.stdout);
 ```
@@ -25,5 +25,5 @@ process.stdin.pipe(trim).pipe(process.stdout);
 Try it out:
 ```bash
 echo "This is a test" | node test.js
-is a t
+is a te
 ```
