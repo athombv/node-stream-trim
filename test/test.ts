@@ -17,7 +17,7 @@ describe('TrimStream', () => {
       stream.end();
       await new Promise(fulfill => stream.on('finish', fulfill));
       const result = Buffer.concat(bufs);
-      assert.strictEqual(result.toString(), 'st');
+      assert.equal(result.toString(), 'st');
     });
     it('should return first part of chunk', async () => {
       const stream = trimStream({ start: 0, end: 1 });
@@ -30,7 +30,7 @@ describe('TrimStream', () => {
       stream.end();
       await new Promise(fulfill => stream.on('finish', fulfill));
       const result = Buffer.concat(bufs);
-      assert(result.toString() === 't');
+      assert.equal(result.toString(), 't');
     });
   });
 
@@ -52,7 +52,7 @@ describe('TrimStream', () => {
       stream.end();
       await new Promise(fulfill => stream.on('finish', fulfill));
       const result = Buffer.concat(bufs);
-      assert(result.toString() === 'st');
+      assert.equal(result.toString(), 'st');
     });
     it('should return all it gets if not enough is available', async () => {
       const stream = trimStream({ start: 2, end: 40 });
@@ -71,7 +71,7 @@ describe('TrimStream', () => {
       stream.end();
       await new Promise(fulfill => stream.on('finish', fulfill));
       const result = Buffer.concat(bufs);
-      assert(result.toString() === 'st');
+      assert.equal(result.toString(), 'st');
     });
     it('should not return anything if none matches', async () => {
       const stream = trimStream({ start: 20, end: 40 });
@@ -84,7 +84,7 @@ describe('TrimStream', () => {
       stream.end();
       await new Promise(fulfill => stream.on('finish', fulfill));
       const result = Buffer.concat(bufs);
-      assert(result.byteLength === 0);
+      assert.equal(result.byteLength, 0);
     });
     it('should return middle part of chunk', async () => {
       const stream = trimStream({ start: 5, end: 6 });
@@ -103,11 +103,86 @@ describe('TrimStream', () => {
       stream.end();
       await new Promise(fulfill => stream.on('finish', fulfill));
       const result = Buffer.concat(bufs);
-      assert(result.toString() === 'i');
+      assert.equal(result.toString(), 'i');
+    });
+  });
+
+  describe('Error handling', () => {
+    it('should throw an error when start > end', () => {
+      assert.throws(() => {
+        trimStream({ start: 10, end: 2 });
+      });
+    });
+    it('should throw an error when start or end is negative', () => {
+      assert.throws(() => {
+        trimStream({ start: -10, end: 2 });
+      });
+      assert.throws(() => {
+        trimStream({ start: 10, end: -2 });
+      });
+      assert.throws(() => {
+        trimStream({ start: -10, end: -2 });
+      });
+    });
+  });
+
+  describe('Unset parameters', () => {
+    it('should return until the end when end is undefined', async () => {
+      const stream = trimStream({ start: 5 });
+      const bufs: Array<Buffer> = [];
+      stream.on('data', (chunk: Buffer) => {
+        bufs.push(chunk);
+      });
+      let chunk = Buffer.from('this');
+      stream._transform(chunk, 'binary', () => {});
+      chunk = Buffer.from(' is');
+      stream._transform(chunk, 'binary', () => {});
+      chunk = Buffer.from(' a');
+      stream._transform(chunk, 'binary', () => {});
+      chunk = Buffer.from(' test');
+      stream._transform(chunk, 'binary', () => {});
+      stream.end();
+      await new Promise(fulfill => stream.on('finish', fulfill));
+      const result = Buffer.concat(bufs);
+      assert.equal(result.toString(), 'is a test');
+    });
+    it('should return everything when end and start are undefined', async () => {
+      const stream = trimStream({ });
+      const bufs: Array<Buffer> = [];
+      stream.on('data', (chunk: Buffer) => {
+        bufs.push(chunk);
+      });
+      let chunk = Buffer.from('this');
+      stream._transform(chunk, 'binary', () => {});
+      chunk = Buffer.from(' is');
+      stream._transform(chunk, 'binary', () => {});
+      chunk = Buffer.from(' a');
+      stream._transform(chunk, 'binary', () => {});
+      chunk = Buffer.from(' test');
+      stream._transform(chunk, 'binary', () => {});
+      stream.end();
+      await new Promise(fulfill => stream.on('finish', fulfill));
+      const result = Buffer.concat(bufs);
+      assert.equal(result.toString(), 'this is a test');
+    });
+    it('should return from 0 when start is undefined', async () => {
+      const stream = trimStream({ end: 4 });
+      const bufs: Array<Buffer> = [];
+      stream.on('data', (chunk: Buffer) => {
+        bufs.push(chunk);
+      });
+      let chunk = Buffer.from('this');
+      stream._transform(chunk, 'binary', () => {});
+      chunk = Buffer.from(' is');
+      stream._transform(chunk, 'binary', () => {});
+      chunk = Buffer.from(' a');
+      stream._transform(chunk, 'binary', () => {});
+      chunk = Buffer.from(' test');
+      stream._transform(chunk, 'binary', () => {});
+      stream.end();
+      await new Promise(fulfill => stream.on('finish', fulfill));
+      const result = Buffer.concat(bufs);
+      assert.equal(result.toString(), 'this');
     });
   });
 });
-
-// import transportStream from '../lib/index';
-
-// process.stdin.pipe(transportStream({ start: Number.parseInt(process.argv[2], 10), end: Number.parseInt(process.argv[3], 10) })).pipe(process.stdout);
