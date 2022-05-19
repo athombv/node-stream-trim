@@ -41,4 +41,5 @@ jobs:
 
       # Run `npm ci` to re-create your local environment (make sure to commit your package-lock.json!).
       - run: npm ci
+      - run: npm run build
       - run: npm test
