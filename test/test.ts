@@ -2,12 +2,12 @@
 
 import * as assert from 'assert';
 // const assert = require('assert');
-import trimStream from '../lib/index';
+import StreamTrim from '../dist/index';
 
-describe('TrimStream', () => {
+describe('StreamTrim', () => {
   describe('small chunk', () => {
     it('should return last part of chunk', async () => {
-      const stream = trimStream({ start: 2, end: 4 });
+      const stream = new StreamTrim({ start: 2, end: 4 });
       const bufs: Array<Buffer> = [];
       stream.on('data', (chunk: Buffer) => {
         bufs.push(chunk);
@@ -20,7 +20,7 @@ describe('TrimStream', () => {
       assert.equal(result.toString(), 'st');
     });
     it('should return first part of chunk', async () => {
-      const stream = trimStream({ start: 0, end: 1 });
+      const stream = new StreamTrim({ start: 0, end: 1 });
       const bufs: Array<Buffer> = [];
       stream.on('data', (chunk: Buffer) => {
         bufs.push(chunk);
@@ -36,7 +36,7 @@ describe('TrimStream', () => {
 
   describe('multiple chunks', () => {
     it('should return last part of chunk', async () => {
-      const stream = trimStream({ start: 2, end: 4 });
+      const stream = new StreamTrim({ start: 2, end: 4 });
       const bufs: Array<Buffer> = [];
       stream.on('data', (chunk: Buffer) => {
         bufs.push(chunk);
@@ -55,7 +55,7 @@ describe('TrimStream', () => {
       assert.equal(result.toString(), 'st');
     });
     it('should return all it gets if not enough is available', async () => {
-      const stream = trimStream({ start: 2, end: 40 });
+      const stream = new StreamTrim({ start: 2, end: 40 });
       const bufs: Array<Buffer> = [];
       stream.on('data', (chunk: Buffer) => {
         bufs.push(chunk);
@@ -74,7 +74,7 @@ describe('TrimStream', () => {
       assert.equal(result.toString(), 'st');
     });
     it('should not return anything if none matches', async () => {
-      const stream = trimStream({ start: 20, end: 40 });
+      const stream = new StreamTrim({ start: 20, end: 40 });
       const bufs: Array<Buffer> = [];
       stream.on('data', (chunk: Buffer) => {
         bufs.push(chunk);
@@ -87,7 +87,7 @@ describe('TrimStream', () => {
       assert.equal(result.byteLength, 0);
     });
     it('should return middle part of chunk', async () => {
-      const stream = trimStream({ start: 5, end: 6 });
+      const stream = new StreamTrim({ start: 5, end: 6 });
       const bufs: Array<Buffer> = [];
       stream.on('data', (chunk: Buffer) => {
         bufs.push(chunk);
@@ -110,25 +110,29 @@ describe('TrimStream', () => {
   describe('Error handling', () => {
     it('should throw an error when start > end', () => {
       assert.throws(() => {
-        trimStream({ start: 10, end: 2 });
+        // eslint-disable-next-line
+        new StreamTrim({ start: 10, end: 2 });
       });
     });
     it('should throw an error when start or end is negative', () => {
       assert.throws(() => {
-        trimStream({ start: -10, end: 2 });
+        // eslint-disable-next-line
+        new StreamTrim({ start: -10, end: 2 });
       });
       assert.throws(() => {
-        trimStream({ start: 10, end: -2 });
+        // eslint-disable-next-line
+        new StreamTrim({ start: 10, end: -2 });
       });
       assert.throws(() => {
-        trimStream({ start: -10, end: -2 });
+        // eslint-disable-next-line
+        new StreamTrim({ start: -10, end: -2 });
       });
     });
   });
 
   describe('Unset parameters', () => {
     it('should return until the end when end is undefined', async () => {
-      const stream = trimStream({ start: 5 });
+      const stream = new StreamTrim({ start: 5 });
       const bufs: Array<Buffer> = [];
       stream.on('data', (chunk: Buffer) => {
         bufs.push(chunk);
@@ -147,7 +151,7 @@ describe('TrimStream', () => {
       assert.equal(result.toString(), 'is a test');
     });
     it('should return everything when end and start are undefined', async () => {
-      const stream = trimStream({ });
+      const stream = new StreamTrim({ });
       const bufs: Array<Buffer> = [];
       stream.on('data', (chunk: Buffer) => {
         bufs.push(chunk);
@@ -166,7 +170,7 @@ describe('TrimStream', () => {
       assert.equal(result.toString(), 'this is a test');
     });
     it('should return from 0 when start is undefined', async () => {
-      const stream = trimStream({ end: 4 });
+      const stream = new StreamTrim({ end: 4 });
       const bufs: Array<Buffer> = [];
       stream.on('data', (chunk: Buffer) => {
         bufs.push(chunk);

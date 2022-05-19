@@ -9,15 +9,15 @@ develop | [![ESLint](https://github.com/athombv/node-stream-trim/workflows/Lint/
 
 Installation:
 ```bash
-> npm install --save @athombv/node-stream-trim
+> npm install --save @athombv/stream-trim
 ```
 
 To trim an input stream from byte 5 until 11, do the following (test.js):
 
 ```javascript
-const trimStream = require('@athombv/node-stream-trim').default;
+import StreamTrim from '@athombv/stream-trim';
 
-const trim = trimStream({ start: 5, end: 12 });
+const trim = new StreamTrim({ start: 5, end: 12 });
 
 process.stdin.pipe(trim).pipe(process.stdout);
 ```

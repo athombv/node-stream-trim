@@ -2,13 +2,13 @@
 
 import { Transform, TransformCallback } from 'stream';
 
-class TrimStream extends Transform {
+class StreamTrim extends Transform {
 
   startByte = 0;
   endByte = -1;
   index = 0;
 
-  constructor(start: number | undefined, end: number | undefined) {
+  constructor({ start, end }:{ start?: number, end?: number }) {
     super();
     if (start && start < 0) {
       throw new Error('start must be greater than 0');
@@ -46,13 +46,4 @@ class TrimStream extends Transform {
 
 }
 
-type Options = {
-  start?: number;
-  end?: number;
-}
-
-function trimStream(options: Options) {
-  return new TrimStream(options.start, options.end);
-}
-
-export default trimStream;
+module.exports = StreamTrim;
